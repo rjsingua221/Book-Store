@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Bookstore</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-green: #3b7a57;
+      --gold: #d4af37;
+      --cream: #f5f5dc;
+    }
+
+    body {
+      background: var(--cream);
+      font-family: 'Roboto', sans-serif;
+      color: #3a3a3a;
+    }
+
+    h1, h2, h3, .navbar-brand {
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 0.05em;
+    }
+    .bg-primary-green {
+      background-color: var(--primary-green) !important;
+    }
+    .text-gold {
+      color: var(--gold) !important;
+    }
+
+    .hero {
+      background: linear-gradient(rgba(42, 89, 63, 0.8), rgba(42, 89, 63, 0.8)),
+                  url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f') center/cover;
+      height: 90vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      background: var(--cream);
+      transform: skewY(-3deg);
+      z-index: 1;
+    }
+
+    .category-card {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 0.3s ease;
+      background: linear-gradient(145deg, #ffffff 0%, #f8f5ec 100%);
+      border-radius: 15px;
+      border: 1px solid rgba(197, 160, 71, 0.15);
+    }
+
+    .category-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(42, 89, 63, 0.15);
+    }
+
+    .book-card {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      border: none;
+      background: linear-gradient(145deg, #ffffff 0%, #f8f5ec 100%);
+    }
+
+    .book-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 40%, rgba(197, 160, 71, 0.1) 50%, transparent 60%);
+      transform: rotate(45deg);
+      transition: 0.5s;
+    }
+
+    .book-card:hover::before {
+      animation: glitter 1.5s infinite;
+    }
+
+    .price-tag {
+      position: absolute;
+      top: 15px;
+      right: -40px;
+      background: var(--gold);
+      color: white;
+      padding: 8px 40px;
+      transform: rotate(45deg);
+      font-size: 0.9em;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    @keyframes glitter {
+      0% { transform: rotate(45deg) translate(-50%, -50%); }
+      100% { transform: rotate(45deg) translate(50%, 50%); }
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: white;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+      border: 2px solid var(--gold);
+    }
+
+    .btn-gold:hover {
+      background: transparent;
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .form-control:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 0.25rem rgba(197, 160, 71, 0.25);
+    }
+
+    .footer-wave {
+      height: 150px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%232a593f' fill-opacity='1' d='M0,160L48,138.7C96,117,192,75,288,80C384,85,480,139,576,160C672,181,768,171,864,149.3C960,128,1056,96,1152,106.7C1248,117,1344,171,1392,197.3L1440,224L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z'/%3E%3C/svg%3E");
+      background-size: cover;
+      margin-top: -100px;
+    }
+
+    .social-icon {
+      transition: all 0.3s ease;
+      color: var(--cream) !important;
+    }
+
+    .social-icon:hover {
+      transform: translateY(-3px) scale(1.1);
+      color: var(--gold) !important;
+    }
+
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-primary-green navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand text-gold fw-bold" href="#">Book Haven</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#categories">Categories</a></li>
+          <li class="nav-item"><a class="nav-link" href="#featured">Featured</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero text-center">
+    <div class="container">
+      <h1 class="display-3 fw-bold text-white mb-4">Where Stories Come Alive</h1>
+      <p class="lead text-white mb-5 fs-4">Curated Collections for Discerning Readers</p>
+      <a href="#featured" class="btn btn-gold btn-lg">Explore Our Shelves</a>
+    </div>
+  </header>
+
+ <!-- Categories Section -->
+<section id="categories" class="py-5 ">
+  <div class="container">
+    <h2 class="text-center mb-5 section-heading text-gold">Shop by Category</h2>
+    <div class="row g-4">
+
+      <!-- Category Card Template -->
+      <div class="col-md-4">
+        <div class="category-card text-center p-4 h-100 rounded shadow-sm bg-primary-green">
+          <div class="icon-wrap mb-3">
+            <i class="fas fa-feather-alt fa-3x gold-text"></i>
+          </div>
+          <h5 class="fw-bold mb-2 text-gold">Fiction</h5>
+          <p class="text-muted mb-3 text-gold">Immerse yourself in captivating stories and unforgettable characters.</p>
+          <a href="#" class="btn btn-gold btn-sm">Shop Now</a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="category-card text-center p-4 h-100 rounded shadow-sm bg-primary-green">
+          <div class="icon-wrap mb-3">
+            <i class="fas fa-brain fa-3x gold-text"></i>
+          </div>
+          <h5 class="fw-bold mb-2 text-gold">Non-Fiction</h5>
+          <p class="text-muted mb-3 text-gold">Explore real-world topics from biographies to science and history.</p>
+          <a href="#" class="btn btn-gold btn-sm">Shop Now</a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="category-card text-center p-4 h-100 rounded shadow-sm bg-primary-green">
+          <div class="icon-wrap mb-3">
+            <i class="fas fa-child fa-3x gold-text"></i>
+          </div>
+          <h5 class="fw-bold mb-2 text-gold">Children's Books</h5>
+          <p class="text-muted mb-3 text-gold">Delightful stories to inspire imagination and learning.</p>
+          <a href="#" class="btn btn-gold btn-sm">Shop Now</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+ <!-- Featured Books Carousel -->
+<section id="featured" class="py-5 text-dark">
+  <div class="container">
+    <h2 class="text-center mb-5 text-gold">Featured Books</h2>
+
+    <div id="bookCarousel" class="carousel slide" data-bs-ride="carousel">
+      <!-- Indicators -->
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#bookCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#bookCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      </div>
+
+      <!-- Multi-item Carousel -->
+      <div class="carousel-inner">
+
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="card h-100 text-center">
+                <img src="assets/imgs/childrens.jpg" class="card-img-top book" alt="Book 1">
+                <div class="card-body">
+                  <h5 class="card-title">My Ways To GOOD CHOICES</h5>
+                  <p class="text-muted">Tatyana Kim</p>
+                  <p class="small text-muted">A heartwarming book that teaches values to children.</p>
+                  <p class="fw-bold">$9.99</p>
+                  <div class="text-warning mb-2">★★★★☆</div>
+                  <button class="btn btn-gold">Buy Now</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100 text-center">
+                <img src="assets/imgs/fictions.jpg" class="card-img-top book" alt="Book 2">
+                <div class="card-body">
+                  <h5 class="card-title">HOW TO END A LOVE STORY</h5>
+                  <p class="text-muted">Yulin Kuang</p>
+                  <p class="small text-muted">A romantic story about heartbreak and healing.</p>
+                  <p class="fw-bold">$14.99</p>
+                  <div class="text-warning mb-2">★★★★★</div>
+                  <button class="btn btn-gold">Buy Now</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100 text-center">
+                <img src="assets/imgs/non fiction.jpg" class="card-img-top book" alt="Book 3">
+                <div class="card-body">
+                  <h5 class="card-title">THE OTHER SLAVERY</h5>
+                  <p class="text-muted">Andrés Reséndez</p>
+                  <p class="small text-muted">An untold history of native enslavement in America.</p>
+                  <p class="fw-bold">$18.50</p>
+                  <div class="text-warning mb-2">★★★★☆</div>
+                  <button class="btn btn-gold">Buy Now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="card h-100 text-center">
+                <img src="assets/imgs/selfhelp.jpg" class="card-img-top book" alt="Book 4">
+                <div class="card-body">
+                  <h5 class="card-title">Atomic Habits</h5>
+                  <p class="text-muted">James Clear</p>
+                  <p class="small text-muted">Discover the power of atomic habits and personal growth.</p>
+                  <p class="fw-bold">$16.00</p>
+                  <div class="text-warning mb-2">★★★★★</div>
+                  <button class="btn btn-gold">Buy Now</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100 text-center">
+                <img src="assets/imgs/comics.jpg" class="card-img-top book" alt="Book 5">
+                <div class="card-body">
+                  <h5 class="card-title">Batman: Year One</h5>
+                  <p class="text-muted">Frank Miller</p>
+                  <p class="small text-muted">A gritty retelling of Batman’s early years in Gotham.</p>
+                  <p class="fw-bold">$12.75</p>
+                  <div class="text-warning mb-2">★★★★☆</div>
+                  <button class="btn btn-gold">Buy Now</button>
+                </div>
+              </div>
+            </div>
+            <!-- Add another book for balance -->
+            <div class="col-md-4">
+              <div class="card h-100 text-center">
+                <img src="assets/imgs/extra.jpg" class="card-img-top book" alt="Book 6">
+                <div class="card-body">
+                  <h5 class="card-title">The Book Thief</h5>
+                  <p class="text-muted">Markus Zusak</p>
+                  <p class="small text-muted">A powerful WWII story seen through the eyes of a child.</p>
+                  <p class="fw-bold">$15.00</p>
+                  <div class="text-warning mb-2">★★★★★</div>
+                  <button class="btn btn-gold">Buy Now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Carousel Controls -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#bookCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#bookCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  </div>
+</section>
+
+
+
+ <!-- Contact Section -->
+<section id="contact" class="py-5 ">
+  <div class="container">
+    <h2 class="text-center mb-3 text-gold">Get in Touch</h2>
+    <p class="text-center text-muted mb-4">Have a question about a book, order, or event? We'd love to hear from you!</p>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-primary-green">
+          <form class="row g-3">
+            <div class="col-md-6 form-floating">
+              <input type="text" class="form-control" id="name" placeholder="Your Name" required>
+              <label for="name">Your Name</label>
+            </div>
+            <div class="col-md-6 form-floating">
+              <input type="email" class="form-control" id="email" placeholder="Your Email" required>
+              <label for="email">Your Email</label>
+            </div>
+            <div class="col-12 form-floating">
+              <textarea class="form-control" placeholder="Your Message" id="message" style="height: 150px" required></textarea>
+              <label for="message">Your Message</label>
+            </div>
+            <div class="col-12 text-center">
+              <button type="submit" class="btn btn-gold px-4">📚 Send Message</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- Footer -->
+  <footer class="bg-primary-green text-white text-center py-4">
+    <div class="container">
+      <p class="mb-1">&copy; 2025 Book Haven. All rights reserved.</p>
+      <div>
+        <a href="#" class="text-gold me-3"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="text-gold me-3"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="text-gold"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
